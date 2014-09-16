@@ -6,7 +6,6 @@ This pelican plugin modifies article and page html to use bootstrap's default cl
 
 from pelican import signals, contents
 from bs4 import BeautifulSoup
-import re
 
 def replace(searchterm, soup, attributes):
     for item in soup.findAll(searchterm):
