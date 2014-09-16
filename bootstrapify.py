@@ -8,13 +8,14 @@ from pelican import signals, contents
 from bs4 import BeautifulSoup
 import re
 
-def replace_tables(soup, attributes='table table-striped table-hover'):
+def replace_tables(soup, attributes=['table',' table-striped', 'table-hover']):
     for tbl in soup.findAll('table'):
-        tbl.attrs['class'] = tbl.attrs.get('class', []) + [attributes]
+        tbl.attrs['class'] = list(set(tbl.attrs.get('class', []) + attributes))
+        print(repr(tbl.attrs.get('class')))
 
-def replace_images(soup, attributes='img-responsive'):
+def replace_images(soup, attributes=['img-responsive']):
     for img in soup.findAll('img'):
-        img.attrs['class'] = img.attrs.get('class', []) + [attributes]
+        img.attrs['class'] = list(set(img.attrs.get('class', []) + attributes))
 
 
 def bootstrapify(content):
