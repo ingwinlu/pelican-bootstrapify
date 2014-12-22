@@ -22,7 +22,7 @@ def bootstrapify(content):
     if isinstance(content, contents.Static):
         return
 
-    soup = BeautifulSoup(content._content)
+    soup = BeautifulSoup(content._content, 'html.parser')
     replace_tables(soup)
     replace_images(soup)
 
