@@ -120,5 +120,26 @@ class TestBootstrapify(unittest.TestCase):
                               ['table', 'table-striped'])
         self.assertEqual(soup.select('table')[1].attrs['id'], 'bootstrapThis')
 
+    def test_static(self):
+        html_doc = """
+        <html><body>
+        <p></p>
+        <a href=""></a>
+        <table></table>
+        <img href="" class="testing">
+        </body></html>
+        """
+
+        settings = get_settings()
+        settings['BOOTSTRAPIFY'] = {'p': ['pclass'],
+                                    'a': ['aclass1', 'aclass2']}
+        content = Static(content=html_doc, settings=settings)
+        bootstrapify(content)
+
+        soup = BeautifulSoup(content._content, 'html.parser')
+
+        self.assertEqual(content._content, html_doc)
+
+
 if __name__ == '__main__':
     unittest.main()
