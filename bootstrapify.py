@@ -11,20 +11,21 @@ def replace(searchterm, soup, attributes):
     for item in soup.select(searchterm):
         item.attrs['class'] = list(set(item.attrs.get('class', []) + attributes))
 
-def replace_tables(soup, attributes=['table',' table-striped', 'table-hover']):
-    replace('table', soup, attributes)
-
-def replace_images(soup, attributes=['img-responsive']):
-    replace('img', soup, attributes)
-
-
 def bootstrapify(content):
     if isinstance(content, contents.Static):
         return
 
+    # Define default behavior for backward compatibility
+    default = {'table': ['table', 'table-striped', 'table-hover'],
+               'img': ['img-responsive']}
+
     soup = BeautifulSoup(content._content, 'html.parser')
-    replace_tables(soup)
-    replace_images(soup)
+
+    # Retrieve bootstrapify settings
+    replacements = content.settings.get('BOOTSTRAPIFY', default)
+
+    for selector, classes in replacements.items():
+        replace(selector, soup, classes)
 
     content._content = soup.decode()
 
