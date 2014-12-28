@@ -8,7 +8,7 @@ from pelican import signals, contents
 from bs4 import BeautifulSoup
 
 def replace(searchterm, soup, attributes):
-    for item in soup.findAll(searchterm):
+    for item in soup.select(searchterm):
         item.attrs['class'] = list(set(item.attrs.get('class', []) + attributes))
 
 def replace_tables(soup, attributes=['table',' table-striped', 'table-hover']):
