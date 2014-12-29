@@ -11,7 +11,22 @@ from bs4 import BeautifulSoup
 from pelican import signals, contents
 
 
-def replace(searchterm, soup, attributes):
+def set_default_config(settings):
+    default_options = {
+        'table': ['table', 'table-striped', 'table-hover'],
+        'img': ['img-responsive']
+    }
+    settings.setdefault('BOOTSTRAPIFY', default_options)
+
+
+def init_default_config(pelican):
+        from pelican.settings import DEFAULT_CONFIG
+        set_default_config(DEFAULT_CONFIG)
+        if(pelican):
+            set_default_config(pelican.settings)
+
+
+def replace_in_with(searchterm, soup, attributes):
     for item in soup.select(searchterm):
         attribute_set = set(item.attrs.get('class', []) + attributes)
         item.attrs['class'] = list(attribute_set)
@@ -21,22 +36,15 @@ def bootstrapify(content):
     if isinstance(content, contents.Static):
         return
 
-    # Define default behavior for backward compatibility
-    default_options = {
-            'table': ['table', 'table-striped', 'table-hover'],
-            'img': ['img-responsive']
-        }
-
+    replacements = content.settings['BOOTSTRAPIFY']
     soup = BeautifulSoup(content._content, 'html.parser')
 
-    # Retrieve bootstrapify settings
-    replacements = content.settings.get('BOOTSTRAPIFY', default_options)
-
     for selector, classes in replacements.items():
-        replace(selector, soup, classes)
+        replace_in_with(selector, soup, classes)
 
     content._content = soup.decode()
 
 
 def register():
+    signals.initialized.connect(init_default_config)
     signals.content_object_init.connect(bootstrapify)
