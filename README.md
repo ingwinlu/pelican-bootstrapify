@@ -1,7 +1,7 @@
 bootstrapify
 ===================================
 
-This [pelican](https://github.com/getpelican/pelican) plugin modifies article and page html to use bootstrap's default classes. This is especially handy if you want to write tables in markdown, since the `attr_list` extension does not play nice with `tables`
+This [pelican](https://github.com/getpelican/pelican) plugin modifies article and page html to use bootstrap's default classes. This is especially handy if you want to write tables in markdown, since the `attr_list` extension does not play nice with `tables`.
 
 #Requirements
 *   Beautifulsoup4 - install via `pip install beautifulsoup4`
@@ -9,10 +9,11 @@ This [pelican](https://github.com/getpelican/pelican) plugin modifies article an
 #Features
 *   Adds `table table-striped table-hover` to all `<table>` elements.
 *   Adds `img-responsive` to all `<img>` elements.
+*   Use `BOOTSTRAPIFY` in your Pelican configuration file to pass a `{'css-selector': ['list-of-classes']}` dictionary to the plugin. Bootstrapify will append `list-of-classes` to all tags that match `css-selector`. The selector can be as simple as a tag name (`table` or `p`) or as complicated as `a.menu:nth-of-type(3)` (see the [Beautifulsoup4 documentation](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#css-selectors)).
 
 #Example for md tables
 1. Write your table in markdown
-    
+
     ```
     | Protocol       | Contact Information
     |:-------------- |:-----------------------------------------------------|
@@ -23,8 +24,8 @@ This [pelican](https://github.com/getpelican/pelican) plugin modifies article an
 
 
 2. there is no step 2, the plugin adds the needed classes to the `<table>` node, resulting in the following output:
-    
-    
+
+
     ```
     <table class="table table-striped table-hover">
     <thead>

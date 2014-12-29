@@ -1,32 +1,50 @@
 '''
 bootstrapify
 ===================================
-This pelican plugin modifies article and page html to use bootstrap's default classes. This is especially handy if you want to write tables in markdown, since the attr_list extension does not play nice with tables
+This pelican plugin adds css classes to nonstatic html output.
+
+This is especially useful if you want to use bootstrap and want
+to add its default classes to your tables and images.
 '''
 
-from pelican import signals, contents
 from bs4 import BeautifulSoup
+from pelican import signals, contents
 
-def replace(searchterm, soup, attributes):
-    for item in soup.findAll(searchterm):
-        item.attrs['class'] = list(set(item.attrs.get('class', []) + attributes))
 
-def replace_tables(soup, attributes=['table',' table-striped', 'table-hover']):
-    replace('table', soup, attributes)
+def set_default_config(settings):
+    default_options = {
+        'table': ['table', 'table-striped', 'table-hover'],
+        'img': ['img-responsive']
+    }
+    settings.setdefault('BOOTSTRAPIFY', default_options)
 
-def replace_images(soup, attributes=['img-responsive']):
-    replace('img', soup, attributes)
+
+def init_default_config(pelican):
+        from pelican.settings import DEFAULT_CONFIG
+        set_default_config(DEFAULT_CONFIG)
+        if(pelican):
+            set_default_config(pelican.settings)
+
+
+def replace_in_with(searchterm, soup, attributes):
+    for item in soup.select(searchterm):
+        attribute_set = set(item.attrs.get('class', []) + attributes)
+        item.attrs['class'] = list(attribute_set)
 
 
 def bootstrapify(content):
     if isinstance(content, contents.Static):
         return
 
+    replacements = content.settings['BOOTSTRAPIFY']
     soup = BeautifulSoup(content._content, 'html.parser')
-    replace_tables(soup)
-    replace_images(soup)
+
+    for selector, classes in replacements.items():
+        replace_in_with(selector, soup, classes)
 
     content._content = soup.decode()
 
+
 def register():
+    signals.initialized.connect(init_default_config)
     signals.content_object_init.connect(bootstrapify)
