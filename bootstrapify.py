@@ -11,19 +11,20 @@ from bs4 import BeautifulSoup
 from pelican import signals, contents
 
 
-def set_default_config(settings):
-    default_options = {
-        'table': ['table', 'table-striped', 'table-hover'],
-        'img': ['img-responsive']
-    }
-    settings.setdefault('BOOTSTRAPIFY', default_options)
+def set_default_config(settings, bootstrapify_default):
+    settings.setdefault('BOOTSTRAPIFY', bootstrapify_default)
 
 
 def init_default_config(pelican):
-        from pelican.settings import DEFAULT_CONFIG
-        set_default_config(DEFAULT_CONFIG)
-        if(pelican):
-            set_default_config(pelican.settings)
+    from pelican.settings import DEFAULT_CONFIG
+    bootstrapify_default = {
+        'table': ['table', 'table-striped', 'table-hover'],
+        'img': ['img-responsive']
+    }
+
+    set_default_config(DEFAULT_CONFIG, bootstrapify_default)
+    if(pelican):
+        set_default_config(pelican.settings, bootstrapify_default)
 
 
 def replace_in_with(searchterm, soup, attributes):
