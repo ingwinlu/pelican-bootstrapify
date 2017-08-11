@@ -10,21 +10,26 @@ to add its default classes to your tables and images.
 from bs4 import BeautifulSoup
 from pelican import signals, contents
 
-
-def set_default_config(settings, bootstrapify_default):
-    settings.setdefault('BOOTSTRAPIFY', bootstrapify_default)
+BOOTSTRAPIFY_DEFAULT = {
+    'table': ['table', 'table-striped', 'table-hover'],
+    'img': ['img-responsive']
+}
+BOOTSTRAPIFY_KEY = 'BOOTSTRAPIFY'
 
 
 def init_default_config(pelican):
     from pelican.settings import DEFAULT_CONFIG
-    bootstrapify_default = {
-        'table': ['table', 'table-striped', 'table-hover'],
-        'img': ['img-responsive']
-    }
 
-    set_default_config(DEFAULT_CONFIG, bootstrapify_default)
+    def update_settings(settings):
+        temp = BOOTSTRAPIFY_DEFAULT.copy()
+        if BOOTSTRAPIFY_KEY in settings:
+            temp.update(settings[BOOTSTRAPIFY_KEY])
+        settings[BOOTSTRAPIFY_KEY] = temp
+        return settings
+
+    DEFAULT_CONFIG = update_settings(DEFAULT_CONFIG)
     if(pelican):
-        set_default_config(pelican.settings, bootstrapify_default)
+        pelican.settings = update_settings(pelican.settings)
 
 
 def replace_in_with(searchterm, soup, attributes):
@@ -37,7 +42,7 @@ def bootstrapify(content):
     if isinstance(content, contents.Static):
         return
 
-    replacements = content.settings['BOOTSTRAPIFY']
+    replacements = content.settings[BOOTSTRAPIFY_KEY]
     soup = BeautifulSoup(content._content, 'html.parser')
 
     for selector, classes in replacements.items():
