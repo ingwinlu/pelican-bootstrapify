@@ -9,7 +9,7 @@ This [pelican](https://github.com/getpelican/pelican) plugin modifies article an
 ## Features
 
 * Adds `table table-striped table-hover` to all `<table>` elements.
-* Adds `img-responsive` to all `<img>` elements.
+* Adds `img-fluid` to all `<img>` elements.
 * Use `BOOTSTRAPIFY` in your Pelican configuration file to pass a `{'css-selector': ['list-of-classes']}` dictionary to the plugin. Bootstrapify will append `list-of-classes` to all tags that match `css-selector`. The selector can be as simple as a tag name (`table` or `p`) or as complicated as `a.menu:nth-of-type(3)` (see the [Beautifulsoup4 documentation](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#css-selectors)).
 
 ## Example for md tables
