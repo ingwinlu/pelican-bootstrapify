@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from pelican import signals, contents
 
 BOOTSTRAPIFY_DEFAULT = {
-    'table': ['table', 'table-striped', 'table-hover'],
+    'table': ['table', 'table-striped'],
     'img': ['img-fluid']
 }
 BOOTSTRAPIFY_KEY = 'BOOTSTRAPIFY'
